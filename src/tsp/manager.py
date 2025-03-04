@@ -5,8 +5,8 @@ from src.logger import logging
 def tsp_manager(distance_matrix, locations):
     try:
         logging.info("Initializing TSP Manager with depot location.")
-        depot_index = locations.index(DEPOT)
-        
+        # depot_index = locations.index(DEPOT)
+        depot_index = 0
         manager = pywrapcp.RoutingIndexManager(
             len(distance_matrix), 1, depot_index
         ) 

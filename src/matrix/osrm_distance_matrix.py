@@ -38,7 +38,7 @@ def create_distance_mat(df_path):
                     distance_matrix[i, j] = distance_matrix[j, i] = float('inf')  # Set as unreachable if an error occurs
         
         logging.info("Distance matrix computation completed successfully.")
-        return pd.DataFrame(distance_matrix, index=location_names, columns=location_names)
+        return distance_matrix, location_names
     
     except Exception as e:
         logging.critical(f"Unexpected error in distance matrix creation: {str(e)}")

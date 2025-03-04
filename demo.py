@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from src.matrix.load_distance_matrix import load_distance_matrix
+from src.matrix.osrm_distance_matrix import create_distance_mat
 from src.tsp.tsp_route import get_route_tsp
 import io
 from src.logger import logging
@@ -15,10 +15,10 @@ async def solve_tsp(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="Invalid file format. Please upload a CSV file.")
         
         contents = await file.read()
-        distance_matrix_path = io.StringIO(contents.decode("utf-8"))
+        df_path = io.StringIO(contents.decode("utf-8"))
         
         try:
-            distance_matrix, locations = load_distance_matrix(distance_matrix_path)
+            distance_matrix, locations = create_distance_mat(df_path)
             logging.info(f"Distance matrix loaded successfully. Locations: {locations}")
         except Exception as e:
             logging.error(f"Error loading distance matrix: {str(e)}")
