@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Solver</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TSP Solver</h1>
+
+        <!-- Upload CSV Section -->
+        <div class="section">
+            <h2>Upload Distance Matrix (CSV)</h2>
+            <input type="file" id="csvFile">
+            <button onclick="uploadMatrix()">Upload</button>
+            <p id="uploadStatus"></p>
+        </div>
+
+        <!-- Solve TSP -->
+        <div class="section">
+            <h2>Solve TSP</h2>
+            <input type="text" id="tspSessionId" placeholder="Enter Session ID">
+            <button onclick="solveTSP()">Solve TSP</button>
+            <p id="tspResult"></p>
+        </div>
+
+        <!-- Delete Matrix -->
+        <div class="section">
+            <h2>Delete Stored Matrix</h2>
+            <input type="text" id="deleteSessionId" placeholder="Enter Session ID">
+            <button onclick="deleteMatrix()">Delete</button>
+            <p id="deleteStatus"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
