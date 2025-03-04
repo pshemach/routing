@@ -1,2 +1,9 @@
 fastapi[all]==0.110.0
+numpy
+pandas
+ortools
+folium
+geopy
+ace_tools
+from_root
 -e .
