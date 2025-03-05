@@ -1,92 +1,145 @@
-const API_BASE_URL = "http://127.0.0.1:8085"; // Backend API URL
+const API_BASE_URL = "http://127.0.0.1:8086";
 
-// Upload CSV File
 async function uploadMatrix() {
-    let fileInput = document.getElementById("csvFile");
-    let uploadStatus = document.getElementById("uploadStatus");
+  let fileInput = document.getElementById("csvFile");
+  let uploadStatus = document.getElementById("uploadStatus");
 
-    if (!fileInput.files.length) {
-        uploadStatus.innerText = "Please select a CSV file.";
-        return;
+  if (!fileInput.files.length) {
+    uploadStatus.innerText = "Please select a CSV file.";
+    return;
+  }
+
+  let formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  uploadStatus.innerText = "Uploading...";
+
+  try {
+    let response = await fetch(`${API_BASE_URL}/upload_matrix`, {
+      method: "POST",
+      body: formData,
+    });
+
+    let result = await response.json();
+    if (response.ok) {
+      uploadStatus.innerText = "Upload Successful!";
+      updateLocations(result.data.locations);
+    } else {
+      uploadStatus.innerText = `Error: ${result.detail}`;
     }
+  } catch (error) {
+    uploadStatus.innerText = `Error: ${error.message}`;
+  }
+}
 
-    let formData = new FormData();
-    formData.append("file", fileInput.files[0]);
+// Function to Update Location Dropdowns
+function updateLocations(locations) {
+  let locationDropdowns = [
+    "restrictedRoadStart",
+    "restrictedRoadEnd",
+    "restrictedLocation",
+    "vehicleRestrictedRoadStart",
+    "vehicleRestrictedRoadEnd",
+  ];
 
-    uploadStatus.innerText = "Uploading...";
+  locationDropdowns.forEach((dropdownId) => {
+    let dropdown = document.getElementById(dropdownId);
+    dropdown.innerHTML = ""; // Clear existing options
+    locations.forEach((location) => {
+      let option = document.createElement("option");
+      option.value = location;
+      option.textContent = location;
+      dropdown.appendChild(option);
+    });
+  });
+}
 
-    try {
-        let response = await fetch(`${API_BASE_URL}/upload_matrix`, {
-            method: "POST",
-            body: formData
-        });
+// Add Shop
+async function addShop() {
+  let shopName = document.getElementById("shopName").value;
+  let shopDemand = document.getElementById("shopDemand").value;
 
-        let result = await response.json();
+  if (!shopName || !shopDemand) {
+    alert("Please enter shop name and demand.");
+    return;
+  }
 
-        if (response.ok) {
-            uploadStatus.innerText = `Upload Successful! Session ID: ${result.session_id}`;
-        } else {
-            uploadStatus.innerText = `Error: ${result.detail}`;
-        }
-    } catch (error) {
-        uploadStatus.innerText = `Error: ${error.message}`;
-    }
+  let response = await fetch(`${API_BASE_URL}/add_shop`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      shop_name: shopName,
+      shop_demand: parseInt(shopDemand),
+    }),
+  });
+
+  let result = await response.json();
+
+  if (response.ok) {
+    alert(result.message); // Show success message
+    document.getElementById(
+      "shopList"
+    ).innerHTML += `<li>${shopName} - Demand: ${shopDemand}</li>`;
+  } else {
+    alert(`Error: ${result.detail}`);
+  }
+}
+
+// Add Vehicle
+async function addVehicle() {
+  let vehicleName = document.getElementById("vehicleName").value;
+  let vehicleCapacity = document.getElementById("vehicleCapacity").value;
+
+  if (!vehicleName || !vehicleCapacity) {
+    alert("Please enter vehicle name and capacity.");
+    return;
+  }
+
+  let response = await fetch(`${API_BASE_URL}/add_vehicle`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      vehicle_name: vehicleName,
+      vehicle_capacity: parseInt(vehicleCapacity),
+    }),
+  });
+
+  let result = await response.json();
+  alert(result.message);
 }
 
 // Solve TSP
 async function solveTSP() {
-    let sessionId = document.getElementById("tspSessionId").value;
-    let tspResult = document.getElementById("tspResult");
+  let tspResult = document.getElementById("tspResult");
+  tspResult.innerText = "Solving TSP...";
 
-    if (!sessionId) {
-        tspResult.innerText = "Please enter a valid Session ID.";
-        return;
-    }
-
-    tspResult.innerText = "Solving TSP...";
-
-    try {
-        let response = await fetch(`${API_BASE_URL}/solve_tsp?session_id=${sessionId}`, {
-            method: "POST"
-        });
-
-        let result = await response.json();
-
-        if (response.ok) {
-            tspResult.innerText = `TSP Route: ${result.route_order.join(" → ")}\nTotal Distance: ${result.total_distance} km`;
-        } else {
-            tspResult.innerText = `Error: ${result.detail}`;
-        }
-    } catch (error) {
-        tspResult.innerText = `Error: ${error.message}`;
-    }
+  try {
+    let response = await fetch(`${API_BASE_URL}/solve_tsp`, { method: "POST" });
+    let result = await response.json();
+    tspResult.innerText = response.ok
+      ? `TSP Route: ${result.route_order.join(" → ")}\nTotal Distance: ${
+          result.total_distance
+        } km`
+      : `Error: ${result.detail}`;
+  } catch (error) {
+    tspResult.innerText = `Error: ${error.message}`;
+  }
 }
 
-// Delete Matrix
-async function deleteMatrix() {
-    let sessionId = document.getElementById("deleteSessionId").value;
-    let deleteStatus = document.getElementById("deleteStatus");
+// Solve VRP
+async function solveVRP() {
+  let vrpResult = document.getElementById("vrpResult");
+  vrpResult.innerText = "Solving VRP...";
 
-    if (!sessionId) {
-        deleteStatus.innerText = "Please enter a valid Session ID.";
-        return;
-    }
-
-    deleteStatus.innerText = "Deleting...";
-
-    try {
-        let response = await fetch(`${API_BASE_URL}/delete_matrix?session_id=${sessionId}`, {
-            method: "DELETE"
-        });
-
-        let result = await response.json();
-
-        if (response.ok) {
-            deleteStatus.innerText = result.message;
-        } else {
-            deleteStatus.innerText = `Error: ${result.detail}`;
-        }
-    } catch (error) {
-        deleteStatus.innerText = `Error: ${error.message}`;
-    }
+  try {
+    let response = await fetch(`${API_BASE_URL}/solve_vrp`, { method: "POST" });
+    let result = await response.json();
+    vrpResult.innerText = response.ok
+      ? `VRP Routes: ${JSON.stringify(result.routes)}\nTotal Distance: ${
+          result.total_distance
+        } km`
+      : `Error: ${result.detail}`;
+  } catch (error) {
+    vrpResult.innerText = `Error: ${error.message}`;
+  }
 }

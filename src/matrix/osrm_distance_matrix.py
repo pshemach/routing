@@ -4,11 +4,8 @@ import numpy as np
 import time
 from src.utils.helper import get_osrm_distance
 
-def create_distance_mat(df_path):
+def create_osrm_distance_mat(df):
     try:
-        logging.info("Loading CSV file for distance matrix computation.")
-        df = pd.read_csv(df_path)
-        
         # Validate required columns
         required_columns = {"ADDRESS", "LATITUDE", "LONGITUDE"}
         if not required_columns.issubset(df.columns):
@@ -30,6 +27,7 @@ def create_distance_mat(df_path):
             for j in range(i + 1, num_locations):  # Avoid duplicate calculations
                 try:
                     dis = get_osrm_distance(locations_gps[i], locations_gps[j])
+                    dis = round(dis,2)
                     distance_matrix[i, j] = dis
                     distance_matrix[j, i] = dis
                     time.sleep(0.2)  # Prevent rate limiting

@@ -1,10 +1,10 @@
 from src.logger import logging
 from src.tsp.tsp_solver import get_solution
 
-def get_route_tsp(distance_matrix, locations):
+def get_route_tsp(distance_matrix, locations, depot):
     print("get_route_tsp")
     try:
-        solution, routing, manager = get_solution(distance_matrix, locations)
+        solution, routing, manager = get_solution(distance_matrix, locations, depot)
         
         if solution is None:
             logging.error("No solution found for the given TSP problem.")

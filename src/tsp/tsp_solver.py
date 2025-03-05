@@ -2,10 +2,10 @@ from src.logger import logging
 from ortools.constraint_solver import routing_enums_pb2, pywrapcp
 from src.tsp.manager import tsp_manager
 
-def get_solution(distance_matrix, locations):
+def get_solution(distance_matrix, locations, depot):
     try:
         logging.info("Initializing TSP Manager.")
-        manager = tsp_manager(distance_matrix, locations)
+        manager = tsp_manager(distance_matrix, locations, depot)
         routing = pywrapcp.RoutingModel(manager)
 
         def distance_callback(from_index, to_index):

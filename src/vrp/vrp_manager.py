@@ -1,20 +1,19 @@
 from ortools.constraint_solver import pywrapcp
 from src.logger import logging
 
-def tsp_manager(distance_matrix, locations, depot):
+def vrp_manager(data):
     try:
         logging.info("Initializing TSP Manager with depot location.")
-        # depot_index = locations.index(DEPOT)
-        depot_index = depot
+        distance_matrix = data.get('distance_matrix')
+        depot = data.get('depot')
+        num_vehicles = len(data.get('vehicle_capacities'))
         manager = pywrapcp.RoutingIndexManager(
-            len(distance_matrix), 1, depot_index
+            len(distance_matrix), num_vehicles, depot
         ) 
         
         logging.info("TSP Manager successfully created.")
         return manager
     except ValueError as ve:
         logging.error(f"Depot location not found in locations list: {str(ve)}")
-        raise
     except Exception as e:
         logging.critical(f"Unexpected error in TSP Manager creation: {str(e)}")
-        raise
