@@ -4,15 +4,34 @@ import os
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s]: - %(message)s')
 
+# file_name = [
+#     'src/__init__.py',
+#     'src/tsp/__init__.py',
+#     'src/vrp/__init__.py',
+#     'src/matrix/__init__.py',
+#     'requirements.txt',
+#     'setup.py',
+#     'app.py',
+#     'demo.py',
+# ]
+
 file_name = [
-    'src/__init__.py',
-    'src/tsp/__init__.py',
-    'src/vrp/__init__.py',
-    'src/matrix/__init__.py',
-    'requirements.txt',
-    'setup.py',
-    'app.py',
-    'demo.py',
+    'frontend/main.py',
+    'frontend/config.py',
+    'frontend/pages/upload_data.py',
+    'frontend/pages/update_vehicles.py',
+    'frontend/pages/update_shops.py',
+    'frontend/pages/restricted_paths.py',
+    'frontend/pages/solve_vrp.py',
+    'frontend/pages/solve_tsp.py',
+    'frontend/pages/view_data.py',
+    'frontend/pages/rest_data.py',
+    'frontend/utils/api_helper.py',
+    'frontend/utils/ui_helper.py',
+    'frontend/__init__.py',
+    'frontend/pages/__init__.py'
+    'frontend/utils/__init__.py'
+    
 ]
 
 for file in file_name:

@@ -1,0 +1,1 @@
+API_URL = "http://127.0.0.1:8088"  # Update if running API on another host
