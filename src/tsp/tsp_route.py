@@ -31,7 +31,7 @@ def get_route_tsp(distance_matrix, locations, depot):
     
     except ValueError as ve:
         logging.error(f"ValueError: {str(ve)}")
-        raise
+        raise 
     except Exception as e:
         logging.critical(f"Unexpected error in solving TSP: {str(e)}")
-        raise
+        raise 

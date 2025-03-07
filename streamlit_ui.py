@@ -4,14 +4,13 @@ import pandas as pd
 import io
 import time
 
-
 # API Base URL
 API_URL = "http://127.0.0.1:8088"  # Change if running API on a different host
 
 st.title("🚚 TSP & VRP Solver")
 
 # Sidebar for navigation
-menu = st.sidebar.radio("Navigation", ["Upload Data", "Manage Vehicles", "Manage Shops", "Manage Restrictions", "Solve TSP", "Solve VRP", "View Data", "Reset"])
+menu = st.sidebar.radio("Navigation", ["Upload Data", "Solve TSP", "Manage Vehicles", "Manage Shops", "Manage Restrictions", "Solve VRP", "View Data", "Reset"])
 
 # 🟢 UPLOAD DATA SECTION
 if menu == "Upload Data":
@@ -112,7 +111,7 @@ elif menu == "Manage Shops":
     if response.status_code == 200:
         shop_data = response.json().get("shop_demands", {})
 
-        if shop_data is not None and len(shop_data) > 0:
+        if shop_data is not None and len(shop_data):
             st.write("### 🔢 Shop Demands Overview")
 
             # Convert to DataFrame for UI display
@@ -230,7 +229,9 @@ elif menu == "Solve TSP":
         response = requests.post(f"{API_URL}/solve_tsp")
         if response.status_code == 200:
             tsp_result = response.json()
-            st.success(f"✅ Route: {tsp_result['route_order']}")
+            st.success("✅ TSP Solved Successfully!")
+            st.write(pd.DataFrame(tsp_result['route_order'], columns=['TSP Location Order']))
+            # st.success(f"✅ Route: {tsp_result['route_order']}")
             st.info(f"📏 Total Distance: {tsp_result['total_distance']} km")
         else:
             st.error(f"❌ Error: {response.json()['detail']}")
@@ -247,9 +248,12 @@ elif menu == "Solve VRP":
             
             for vehicle, details in vrp_result['routes'].items():
                 st.subheader(f"🚚 {vehicle}")
-                st.write(f"**Route:** {details['route']}")
-                st.write(f"**Total Distance:** {details['total_distance']} km")
-                st.write(f"**Total Load:** {details['total_load']} units")
+                vehicle_df = pd.DataFrame(details['route'])
+                vehicle_df.columns = ['VRP Location Order', 'Loadings']
+                st.write(vehicle_df)
+                # st.write(f"**Route:** {details['route']}")
+                st.info(f"**Total Distance:** {details['total_distance']} km")
+                st.info(f"**Total Load:** {details['total_load']} units")
         else:
             st.error(f"❌ Error: {response.json()['detail']}")
 

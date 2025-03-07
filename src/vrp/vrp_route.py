@@ -55,7 +55,7 @@ def get_vrp_solution(data):
         vehicle_details["route"] = route_path
         vehicle_details["total_distance"] = route_distance
         vehicle_details["total_load"] = route_load
-        routes[f"vehicle_{vehicle_id}"] = vehicle_details
+        routes[f"Vehicle {list(data.get('vehicle_capacities').keys())[vehicle_id]}"] = vehicle_details
 
         # Update overall totals
         total_distance += route_distance
