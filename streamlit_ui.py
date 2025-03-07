@@ -21,7 +21,7 @@ if menu == "Upload Data":
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
     
     # Submit button to trigger the upload
-    if uploaded_file:
+    if uploaded_file is not None:
         st.write(f"📄 Selected File: **{uploaded_file.name}**")  # Show the selected file name
     
         if st.button("Upload File"):
@@ -112,7 +112,7 @@ elif menu == "Manage Shops":
     if response.status_code == 200:
         shop_data = response.json().get("shop_demands", {})
 
-        if shop_data:
+        if shop_data is not None and len(shop_data) > 0:
             st.write("### 🔢 Shop Demands Overview")
 
             # Convert to DataFrame for UI display

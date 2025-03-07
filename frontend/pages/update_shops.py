@@ -14,7 +14,7 @@ def show_page():
     if response.status_code == 200:
         shop_data = response.json().get("shop_demands", {})
 
-        if shop_data:
+        if shop_data is not None and len(shop_data) > 0:
             st.write("### 🔢 Shop Demands Overview")
 
             # Convert to DataFrame for UI display
