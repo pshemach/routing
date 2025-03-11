@@ -6,4 +6,5 @@ folium
 geopy
 ace_tools
 from_root
+googlemaps
 -e .
